@@ -4,11 +4,11 @@ const morgan = require('morgan');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
 
-// Route files
-const bootcamps = require('./routes/bootcamps');
-
 // Load env vars
 dotenv.config({path: './config/config.env'});
+
+// Route files
+const bootcamps = require('./routes/bootcamps');
 
 // Connect DB
 connectDB();
