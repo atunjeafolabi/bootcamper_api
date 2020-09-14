@@ -12,7 +12,7 @@ exports.getCourses = asyncHandler(async(req, res, next) => {
     if(req.params.bootcampId){
         query = Course.find({bootcamp: req.params.bootcampId});
     }else {
-        query = Course.find();
+        query = Course.find().populate('bootcamp');
     }
 
     // Execute query
@@ -20,7 +20,7 @@ exports.getCourses = asyncHandler(async(req, res, next) => {
 
     res.status(200).json({
         success: true,
-        count: courses.count,
+        count: courses.length,
         data: courses
     });
 })

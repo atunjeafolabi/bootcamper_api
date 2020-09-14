@@ -26,8 +26,8 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     // Convert to proper mongodb format
     queryStr = JSON.parse(queryStr);
 
-    // Find resource
-    query = Bootcamp.find(queryStr);
+    // Find resource and load related courses
+    query = Bootcamp.find(queryStr).populate('courses');
 
     // Select Fields
     if (req.query.select) {
@@ -46,7 +46,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
 
     // Pagination
     const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 2;
+    const limit = parseInt(req.query.limit, 10) || 25;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const total = await Bootcamp.countDocuments();
@@ -121,11 +121,13 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 // @access  Public
 exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
 
-    const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+    const bootcamp = await Bootcamp.findById(req.params.id);
 
     if(!bootcamp){
         return next(new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404));
     }
+
+    bootcamp.remove();
 
     res.status(200).json({success: true, data: {}});
         
