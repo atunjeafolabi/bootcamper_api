@@ -97,7 +97,7 @@ exports.deleteCourse = asyncHandler(async(req, res, next) => {
         return next(new ErrorResponse(`No course found with the id of ${req.params.id}`), 404);
     }
 
-    await Course.remove();
+    await course.remove();
     
     res.status(200).json({
         success: true,
